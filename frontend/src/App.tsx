@@ -91,7 +91,7 @@ function App() {
 
         <hr />
 
-        <div></div>
+        
         {tasks.map(task => (
           <div key={task.id}>
             <button onClick={() => void deleteTask(task.id)}>x</button>
