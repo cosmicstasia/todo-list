@@ -1,0 +1,11 @@
+FROM oven/bun:latest
+
+WORKDIR  /app
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
+
+COPY src ./src
+COPY tsconfig.json ./
+COPY sqlite.db ./
+EXPOSE 3000
+CMD [ "bun", "run", "src/index.ts" ]
