@@ -1,31 +1,39 @@
-import { useEffect, useState } from 'react'
-import './App.css'
+import { useEffect, useState } from 'react';
+import './App.css';
 
 type Task = {
-  id: number,
-  title: string,
-  content: string,
-}
+  id: number;
+  title: string;
+  content: string;
+};
 
 function App() {
   // Store task list and how notes are updated
-  const [tasks, setTasks] = useState<Task[]>([])
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   // Store task data and how that data changes
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
   async function fetchTasks(): Promise<Task[]> {
-    const res = await fetch('http://localhost:3000/tasks')
-    const data = await res.json()
-    return data
+    const res = await fetch('http://localhost:3000/tasks');
+    const data = await res.json();
+    return data;
+  }
+
+  async function deleteTask(id: number) {
+    await fetch('http://localhost:3000/tasks/${id}', {
+      method: 'DELETE',
+    });
+
+    setTasks(currentTasks => currentTasks.filter(task => task.id !== id));
   }
 
   async function createTask() {
     await fetch('http://localhost:3000/tasks', {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         title,
@@ -33,29 +41,29 @@ function App() {
       }),
     });
 
-    setTitle("");
-    setContent("");
+    setTitle('');
+    setContent('');
 
-    setTasks(await fetchTasks())
+    setTasks(await fetchTasks());
   }
 
   useEffect(() => {
-    let ignore = false
+    let ignore = false;
 
     async function loadTasks() {
-      const data = await fetchTasks()
+      const data = await fetchTasks();
 
       if (!ignore) {
-        setTasks(data)
+        setTasks(data);
       }
     }
 
-    void loadTasks()
+    void loadTasks();
 
     return () => {
-      ignore = true
-    }
-  }, [])
+      ignore = true;
+    };
+  }, []);
 
   return (
     <main>
@@ -63,30 +71,31 @@ function App() {
         <h1>Todo App</h1>
         <div>
           <input
-            placeholder='Title'
+            placeholder="Title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={e => setTitle(e.target.value)}
           />
 
           <br />
 
-          <textarea placeholder='Content'
+          <textarea
+            placeholder="Content"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={e => setContent(e.target.value)}
           />
 
           <br />
 
-          <button onClick={() => void createTask()}>
-            Add Note
-          </button>
+          <button onClick={() => void createTask()}>Add Note</button>
         </div>
-      
+
         <hr />
-      
+
         <div></div>
-        {tasks.map((task) => (
+        {tasks.map(task => (
           <div key={task.id}>
+            <button onClick={() => void deleteTask(task.id)}>x</button>
+
             <h2>{task.title}</h2>
             <p>{task.content}</p>
           </div>
