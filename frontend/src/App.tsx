@@ -22,7 +22,7 @@ function App() {
   }
 
   async function deleteTask(id: number) {
-    await fetch('http://localhost:3000/tasks/${id}', {
+    await fetch(`http://localhost:3000/tasks/${id}`, {
       method: 'DELETE',
     });
 
@@ -30,7 +30,7 @@ function App() {
   }
 
   async function createTask() {
-    await fetch('http://localhost:3000/tasks', {
+    await fetch("http://localhost:3000/tasks", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
